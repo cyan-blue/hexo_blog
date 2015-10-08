@@ -9,6 +9,7 @@ description:  NULL      #网站描述, 用于爬虫抓取的关键词
 author: Yann    #作者名称
 email: 907790764@qq.com  #作者邮箱
 language: zh-Hans      #网页编码,中文
+About: /about
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -68,6 +69,9 @@ theme: next
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repository: git@github.com:cyan-blue/cyan-blue.github.io.git   //填入上面你获得的项目地址
+  branch: master  //一般为master
 
 duoshuo_shortname: yun-yan
+
