@@ -7,6 +7,7 @@
       <span class="site-title">{{ config.title }}</span>
   </a>
   <span class="logo-line-after"><i></i></span>
+  <span class="site-title" style="font-size:13px;color:#B18C8C">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{config.subtitle}}</span>
 </h1>
 
 <div class="site-nav-toggle">
