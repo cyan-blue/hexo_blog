@@ -7,11 +7,7 @@ tags:
 ---
 
 ## Django Basics
-### django多线程开发服务器django-devserver
-  * devserver:http://pypi.python.org/pypi/django-devserver
-  * django-scale-sample:http://www.slideshare.net/zeeg/djangocon-2010-scaling-disqus
-  * django-tornado:http://jxq.me/2013/05/03/djangotornado/
-  * django-tornado-meet:http://ultimatenerdiness.com/2012/10/14/django-and-tornado/
+
 ==== 在Django中MySQL的Composite Primary Key的实现====
   * Django不直接支持Composite Primary Key，但是可以如下实现。
     - 定义model，选择composite key中的一个作为主键。
