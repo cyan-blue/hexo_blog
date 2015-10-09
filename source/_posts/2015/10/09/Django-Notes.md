@@ -8,38 +8,82 @@ tags:
 
 ## Django Basics
 
-==== 在Django中MySQL的Composite Primary Key的实现====
+##### 使用django的权限管理系统permission
+
+* 为model添加权限
+
+    ```
+    class OrderList(models.Model):
+        id = BigIntegerAutoField(primary_key=True)
+        buyer_name = models.CharField(default="",max_length=32, verbose_name=u'买手')
+        order_amount = models.FloatField(default=0, verbose_name=u'金额')
+        created = models.DateField(auto_now_add=True, verbose_name=u'订货日期')
+        updated = models.DateTimeField(auto_now=True, verbose_name=u'更新日期')
+
+        class Meta:
+            db_table = 'suplychain_flashsale_orderlist'
+            verbose_name = u'**表'
+            verbose_name_plural = u'**表'
+            permissions = [("change_order_list_inline", u"**"),]
+
+        def __unicode__(self):
+            return '<%s,%s,%s>' % (str(self.id or ''), self.id, self.buyer_name)
+    ```
+
+* views中可以使用如下方法来操作权限
+
+    ```
+    request.user.has_perm('dinghuo.change_order_list_inline')
+    ```
+
+* 在template中使用权限方法：
+
+    ```
+    {% if perms.conf %}
+        <p>You have permission to do something in the foo app.</p>
+    <p>You can vote!</p>
+    {% endif %}
+    {% if perms.conf.oprater_task %}
+           <p>You can drive!</p>
+    <p>You don't have permission to do anything in the foo app.</p>
+    {% endif %}
+    ```
+
+##### 在Django中MySQL的Composite Primary Key的实现
   * Django不直接支持Composite Primary Key，但是可以如下实现。
     - 定义model，选择composite key中的一个作为主键。
-    - 在model内部的Meta内，使用**unique_together**把composite key组织在一起。例如：<code python>
-      class Test(models.Model):
-          user_id = models.CharField(max_length=16, primary_key=True) # 选取user_id作为django层面的primary key
-          item_id = models.CharField(max_length=16)
-
-          class Meta:
-              unique_together = ("user_id", "item_id") # (user_id, item_id)就是我们需要的composite primary key
-      </code>
-    - 在MySQL层面（只针对MySQL数据库），对Test这个model所对应的表重新创建： <code>
+    - 在model内部的Meta内，使用**unique_together**把composite key组织在一起。
+    例如：
+    ```
+          class Test(models.Model):
+              user_id = models.CharField(max_length=16, primary_key=True) # 选取user_id作为django层面的primary key
+              item_id = models.CharField(max_length=16)
+              class Meta:
+                  unique_together = ("user_id", "item_id") # (user_id, item_id)就是我们需要的composite primary key
+      ```
+    - 在MySQL层面（只针对MySQL数据库），对Test这个model所对应的表重新创建：
+    ```
       mysql> DROP TABLE service_test; #丢弃Django syncdb创建的表
       mysql> CREATE TABLE service_test (
                user_id VARCHAR(16) NOT NULL,
                item_id VARCHAR(16) NOT NULL,
                primary key (user_id, item_id)
-             ) ENGINE=InnoDB; </code>
+             ) ENGINE=InnoDB;
+    ```
 
-==== 得到Current User ====
-  * https://code.djangoproject.com/wiki/CookBookNewformsAdminAndUser
-
-==== Model字段缺省值(default=) ====
-  - 用例: \\ <code python>
+##### Model字段缺省值(default=)
+  - 用例:
+  ```
     created_at = models.DatetimeField(default=datetime.datetime.now)
-    dummy_int  = models.IntegerField(default=0) </code>
+    dummy_int  = models.IntegerField(default=0)
+    ```
   - 原理:
     * default值并没有写入数据库的表中：如果写入数据库表中，字段//dummy_int//的定义应包含“DEFAULT 0”；但数据库表中未有体现。
     * django model在构造函数//%%__init__%%()//中设置各字段的default值:根据default=0,构造函数内就把dummy_int的值设为0.
     * 代码体现在///django/db/models/base.py//, 308-354行。
   - 如果要让default值的设置体现在数据库表上，则要做以下改动：
-    * 改动文件//django/db/backends/creation.py//: <code python>
+    * 改动文件//django/db/backends/creation.py//:
+    ```
       def sql_create_model(self, model, style, known_models=set()):
           ...
           ## add the following code：
@@ -47,7 +91,8 @@ tags:
               if hasattr(f.default, '__call__'):
                   pass ## we have a little bit trouble here -- default is a python method!!!
               else:
-                  field_output.append(style.SQL_KEYWORD('DEFAULT ' + f.default.__str__())) </code>
+                  field_output.append(style.SQL_KEYWORD('DEFAULT ' + f.default.__str__()))
+    ```
     * 什么时候需要把default值体现在数据库表中？
       - 一个简单的用列：更新数据库中记录，如果记录被修改，时间戳也会自动更新为修改记录的新时间；如果记录其他字段未被修改，时间戳不会变化。
         * 在django层面，无法达到该效果。因为每次update操作，django必须设置时间戳字段的值，这样即使数据库表中其他字段没有修改，该时间戳字段也被修改了。
@@ -57,30 +102,39 @@ tags:
       - 如果数据库表中对相应字段已有default配置，那么model的构造函数内就不必对该字段进行default值的设置。**所以这不是一项简单的工作，请不要轻易去尝试改动**。
     * Reference: http://www.supermind.org/blog/671/django-not-setting-default-column-value-in-mysql
 
-==== Model主键自增 ====
-  * 用例: \\ <code>
+##### Model主键自增
+  * 用例:
+    ```
     d = models.AutoField(primary_key=True)
     这是一个自增主键(auto-incrementing primary key)如果你要指定一个自定义主键，将该字段设置为primary_key=True。如果
     Django看到你显式的设置了Field primary key，
     它将不会增加自增id字段。每个model必须有exactly one字段设置为primary_key=True.
     如显示添加自己的主键：uid = models.BigIntegerField(primary_key=True)
-    则uid需要自己在程序里去赋值或去数据库将主键更改为自增，并保证满足主键要求 </code>
+    则uid需要自己在程序里去赋值或去数据库将主键更改为自增，并保证满足主键要求
+    ```
 
-==== update() 方法 ====
-  - 用例: <code python>
+###### update() 方法
+  - 用例:
+    ```
     # change User record: set status=1 for all records that have id=1;
     # return value x is the number of records that have id=1.
-    x = User.objects.filter(id=1).update(status=1) </code>
+    x = User.objects.filter(id=1).update(status=1)
+    ```
   - 如果希望update()返回被更新的记录数(而不是满足filter条件的记录数),需要改变文件///django/db/backends/mysql/base.py//:
-    * 源代码如下: \\ <code python>
+    * 源代码如下:
+    ```
       # We need the number of potentially affected rows after an
       # "UPDATE", not the number of changed rows.
-      kwargs['client_flag'] = CLIENT.FOUND_ROWS </code>
-    * 改为: \\ <code python>
-      kwargs['client_flag'] = CLIENT.MULTI_RESULTS </code>
+      kwargs['client_flag'] = CLIENT.FOUND_ROWS
+    ```
+    * 改为:
+    ```
+      kwargs['client_flag'] = CLIENT.MULTI_RESULTS
+    ```
 
-==== save() 方法 ====
-  - 内部处理流程:<code>
+##### save() 方法
+  - 内部处理流程:
+  ```
     1) 发出一个预存信号。 它发出一个将要存储一个对象的通知。你可以注册一个监听程序，
     在信号发出的时候就会被调用。
 
@@ -94,15 +148,17 @@ tags:
 
     4) 向数据库中插入数据。 经过预处理准备好的数据然后会组合成一条SQL语句来插入数据库。
 
-    5) 发出存毕信号。 与预存信号类似，存毕信号在对象成功保存之后发出。同样，这些信号也还没有文档化。</code>
-  - 处理原则：<code>
+    5) 发出存毕信号。 与预存信号类似，存毕信号在对象成功保存之后发出。同样，这些信号也还没有文档化。
+    ```
+  - 处理原则：```
     1) 如果对象的主键属性被设置成相当于 True 的值（比如 None 或者空字符串之外的值），Django会执行一个 SELECT 查询来检测是否已存在一个相同主键的记录。
 
     2) 如果已经存在一个主键相同的记录，Django就执行 UPDATE 查询。
 
-    3) 如果对象的主键属性 没有 被设置，或者被设置但数据库中没有与之同主键的记录，那么Django就会执行 INSERT 插入。</code>
+    3) 如果对象的主键属性 没有 被设置，或者被设置但数据库中没有与之同主键的记录，那么Django就会执行 INSERT 插入。
+    ```
 
-==== 类实例序列化与反序列化 ====
+##### 类实例序列化与反序列化
   - 对于django中Model对象:<code python>
     from django.core import serializers
     serializers.serialize('json', queryset, indent=2,
@@ -119,7 +175,7 @@ tags:
     然后执行命令：pip install -U jsonpickle。</code>
   - 参考：[[http://zhdoc.bitsrv.net/django/html/topics/serialization.html]]and[[http://jsonpickle.github.com/]]
 
-==== django中静态文件路径配置 ====
+###### django中静态文件路径配置
   - 首先，在settings.py中加入一条静态路径的常量：<code python>
     STATIC_FILE_ROOT='/home/meixqhi/workspace/django/src/fbproject'
     </code>
@@ -131,7 +187,7 @@ tags:
     http://domain/apppath/static/home.html
     </code>
 
-==== paginator ====
+##### paginator
   *分页 <code>
    from django.core.paginator import Paginator
    from models import Weibo
@@ -141,7 +197,7 @@ tags:
    page = paginator.page(1)
    page.object_list</code>
 
-==== Import module,model ====
+##### Import module,model
   * 动态加载module,model：<code>
     from django.utils.importlib import import_module
     import_module(module)
@@ -149,7 +205,7 @@ tags:
     from django.db import model
     model = models.get_model('weibo', 'weibo') #(app_label,model_name)</code>
 
-==== Signal ====
+##### Signal
   * Signal机制 <code>
         function:
 	connect(self, receiver, sender=None, weak=True, dispatch_uid=None)
@@ -169,21 +225,8 @@ tags:
     - 如果要防止某个方法在module重复加载时也被重复监听，可以在connect方法中添加唯一的标识：dispatch_uid='my_update_blogs'
     - 由于监听方法默认状态weak=True是不保证一定会执行的，由于方法的弱引用会在资源不够的时候被垃圾回收器回收，如果一定要执行，则需显示在connect中设置weak=False。
 
-==== 其他 ====
-  * Django templates \\ <code>
-    /usr/local/lib/python2.7/dist-packages/Django-1.3-py2.7.egg/django/contrib/admin/templates/admin/base_site.html </code>
 
-===== Django Tools =====
-  * python-django-lint (Static analysis tool for Django projects and applications)
-    - installation \\ <code bash>
-      sudo apt-get install python-django-lint </code>
-    - run \\ <code bash>
-      django-lint example.py </code>
-    - Reference: http://chris-lamb.co.uk/projects/django-lint/
-  * Debug django memory leak
-    - http://blog.mfabrik.com/2008/03/07/debugging-django-memory-leak-with-trackrefs-and-guppy/
-
-===== Django Deployment =====
+##### Django Deployment
   - Install //libapache2-mod-wsgi//: \\ <code>
     sudo apt-get install libapache2-mod-wsgi </code>
   - Suppose you have django project //system// under directory ///srv/internals//: <code>
@@ -285,19 +328,26 @@ tags:
       MIDDLEWARE_CLASSES = (
         'tagtex.base.middleware.ProfileMiddleware',
         )</code>
-    - 运行server，发送请求 <code>
-       如http://<yourserver>/yoururl/?prof&params </code>
+    - 运行server，发送请求
+    ```
+       如http://<yourserver>/yoururl/?prof&params
+       ```
 
 ===== mockserver =====
   * mockserver的主要功能是通过代理记录上次请求的状态并保存，并为下次请求返回相同的结果。
   * 使用步骤：
-    - 先安装mock_server <code>
-      git+ssh://git@s2/django-mock-server.git#egg=django-mock-server (也可以直接下载)</code>
-    - 然后将recorder app添加到settings.py的INSTALLED_APPS中 <code>
+    - 先安装mock_server
+    ```
+      git+ssh://git@s2/django-mock-server.git#egg=django-mock-server (也可以直接下载)
+      ```
+    - 然后将recorder app添加到settings.py的INSTALLED_APPS中
+    ```
       INSTALLED_APPS = (
           'mock_server.recorder'
-        )</code>
-    - 设置代理url <code>
+        )
+        ```
+    - 设置代理url
+    ```
          from django.conf.urls.defaults import patterns, include, url
          from mock_server.recorder.views import RecordView,PlaybackView
          from mock_server.recorder.recorder import Recorder
@@ -309,185 +359,145 @@ tags:
 
              url(r'^(?P<url>.*)$', RecordView.as_view(recorder=recorder,proxy_format='%s/%%s'%SITE_API_ENDPOINT),name='site_api'),
              #url(r'^(?P<url>.*)$', PlaybackView.as_view(recorder=recorder,proxy_format='%s/%%s'%SITE_API_ENDPOINT),name='site_api'),
-         )</code>
+         )
+         ```
     - 使用前先使用第一条url，RecordView，注释掉第二条，启动服务器，将你要mock的所有请求都先都由mockserver来代理，mockserver会将所有请求都记录保存到数据库。
     - 然后再打开第二条url，Playback回放，注释掉第一条，所有请求都会返回之前一样的结果。
 
-===== User Profile =====
-  * If you'd like to store additional information related to your users, Django provides a method to specify a site-specific related model -- termed a "user profile" -- for this purpose
-    * Reference: https://docs.djangoproject.com/en/dev/topics/auth/#auth-profiles
 
-===== Override Runserver Command ====
-  * To override **runserver** Command, add the following to into //management/commands/runnserver.py//: <code python>
-class Command(BaseRunserverCommand):
-    option_list = BaseRunserverCommand.option_list + (
-        make_option('--adminmedia', dest='admin_media_path', default='',
-            help='Specifies the directory from which to serve admin media.'),
-    )
+##### Override Runserver Command
+  * To override **runserver** Command,
+  add the following to into //management/commands/runnserver.py//:
+    ```
+    class Command(BaseRunserverCommand):
+        option_list = BaseRunserverCommand.option_list + (
+            make_option('--adminmedia', dest='admin_media_path', default='',
+                help='Specifies the directory from which to serve admin media.'),
+        )
 
-    """
-    Change the runserver default port to 9000. The method can be generically applied if
-    the default port needs to be changed.
-    """
-    def handle(self, addrport="9000", *args, **options):
-        super(Command, self).handle(addrport, *args, **options)
-
-    def get_handler(self, *args, **options):
         """
-        Serves admin media like old-school (deprecation pending).
+        Change the runserver default port to 9000. The method can be generically applied if
+        the default port needs to be changed.
         """
+        def handle(self, addrport="9000", *args, **options):
+            super(Command, self).handle(addrport, *args, **options)
 
-        handler = super(Command, self).get_handler(*args, **options)
-        return AdminMediaHandler(handler, options.get('admin_media_path', ''))
-    </code>
-  * Writing custom django-admin commands: https://docs.djangoproject.com/en/dev/howto/custom-management-commands/
-  * Problem: after override runserver command, static files wont be automatically handled with "STATICFILES_DIR" setting variable. To handle static files, add the following code into the top level //urls.py//: <code python>
-    (r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': settings.STATIC_DOC_ROOT}) </code>
-  * How to server static files: https://docs.djangoproject.com/en/1.2/howto/static-files/
-==== django replication master/slave ====
-  * django_replicated toollib:
-    - Install django_replicated distribution using "python setup.py install".
-    - In settings.py configure your master and slave databases in a standard way:<code>
+        def get_handler(self, *args, **options):
+            """
+            Serves admin media like old-school (deprecation pending).
+            """
 
-    DATABASES {
-        'default': {
-    	# ENGINE, HOST, etc.
-        },
-        'slave1': {
-    	# ENGINE, HOST, etc.
-        },
-        'slave2': {
-    	# ENGINE, HOST, etc.
-        },
-    }</code>
-    - Teach django_replicated which databases are slaves:<code>
+            handler = super(Command, self).get_handler(*args, **options)
+            return AdminMediaHandler(handler, options.get('admin_media_path', ''))
+    ```
 
-    DATABASE_SLAVES = ['slave1', 'slave2']
-    The 'default' database is always treated as master.</code>
-    - Configure a replication router:<code>
 
-    DATABASE_ROUTERS = ['django_replicated.ReplicationRouter']</code>
-    - Configure timeout to exclude a database from the available list after an unsuccessful ping:<code>
+##### 数据导入导出
+  * 数据导出:
+    ```
+        python manage.py dumpdata logistics.LogisticsCompany --indent=2 --format=json --natural >fixtures/initial_logistics_company.json
+    ```
+  * 数据导入:
+    ```
+        python manage.py loaddata fixtures/initial_logistics_company.json
+    ```
 
-    DATABASE_DOWNTIME = 20
-    The default downtime value is 60 seconds.</code>
-  * 参考：https://github.com/isagalaev/django_replicated
+##### 多个queryset 合并成一个
+  * django
+    ```
+        from itertools import islice, chain
 
-==== 数据导入导出 ====
-  * 数据导出:<code>
-    python manage.py dumpdata logistics.LogisticsCompany --indent=2 --format=json --natural >fixtures/initial_logistics_company.json
-    </code>
-  * 数据导入:<code>
-    python manage.py loaddata fixtures/initial_logistics_company.json
-    </code>
-==== 多个queryset 合并成一个 ====
-  * <code python>
-from itertools import islice, chain
+        class QuerySetChain(object):
+            """
+            Chains multiple subquerysets (possibly of different models) and behaves as
+            one queryset.  Supports minimal methods needed for use with
+            django.core.paginator.
+            """
 
-class QuerySetChain(object):
-    """
-    Chains multiple subquerysets (possibly of different models) and behaves as
-    one queryset.  Supports minimal methods needed for use with
-    django.core.paginator.
-    """
+            def __init__(self, *subquerysets):
+                self.querysets = subquerysets
 
-    def __init__(self, *subquerysets):
-        self.querysets = subquerysets
+            def count(self):
+                """
+                Performs a .count() for all subquerysets and returns the number of
+                records as an integer.
+                """
+                return sum(qs.count() for qs in self.querysets)
 
-    def count(self):
-        """
-        Performs a .count() for all subquerysets and returns the number of
-        records as an integer.
-        """
-        return sum(qs.count() for qs in self.querysets)
+            def _clone(self):
+                "Returns a clone of this queryset chain"
+                return self.__class__(*self.querysets)
 
-    def _clone(self):
-        "Returns a clone of this queryset chain"
-        return self.__class__(*self.querysets)
+            def _all(self):
+                "Iterates records in all subquerysets"
+                return chain(*self.querysets)
 
-    def _all(self):
-        "Iterates records in all subquerysets"
-        return chain(*self.querysets)
+            def __getitem__(self, ndx):
+                """
+                Retrieves an item or slice from the chained set of results from all
+                subquerysets.
+                """
+                if type(ndx) is slice:
+                    return list(islice(self._all(), ndx.start, ndx.stop, ndx.step or 1))
+                else:
+                    return islice(self._all(), ndx, ndx+1).next()
+    ```
 
-    def __getitem__(self, ndx):
-        """
-        Retrieves an item or slice from the chained set of results from all
-        subquerysets.
-        """
-        if type(ndx) is slice:
-            return list(islice(self._all(), ndx.start, ndx.stop, ndx.step or 1))
-        else:
-            return islice(self._all(), ndx, ndx+1).next()
-  </code>
-==== django批量添加和更新 ====
-  * django insert&update:<code python>
-def insert_many(objects, using="default"):
-    """Insert list of Django objects in one SQL query. Objects must be
-    of the same Django model. Note that save is not called and signals
-    on the model are not raised."""
-    if not objects:
-        return
+##### django批量添加和更新
+  * django insert&update:
+  ```
+    def insert_many(objects, using="default"):
+        """Insert list of Django objects in one SQL query. Objects must be
+        of the same Django model. Note that save is not called and signals
+        on the model are not raised."""
+        if not objects:
+            return
 
-    import django.db.models
-    from django.db import connections
-    con = connections[using]
+        import django.db.models
+        from django.db import connections
+        con = connections[using]
 
-    model = objects[0].__class__
-    fields = [f for f in model._meta.fields if not isinstance(f, django.db.models.AutoField)]
-    parameters = []
-    for o in objects:
-        parameters.append(tuple(f.get_db_prep_save(f.pre_save(o, True), connection=con) for f in fields))
+        model = objects[0].__class__
+        fields = [f for f in model._meta.fields if not isinstance(f, django.db.models.AutoField)]
+        parameters = []
+        for o in objects:
+            parameters.append(tuple(f.get_db_prep_save(f.pre_save(o, True), connection=con) for f in fields))
 
-    table = model._meta.db_table
-    column_names = ",".join(con.ops.quote_name(f.column) for f in fields)
-    placeholders = ",".join(("%s",) * len(fields))
-    con.cursor().executemany(
-        "insert into %s (%s) values (%s)" % (table, column_names, placeholders),
-        parameters)
+        table = model._meta.db_table
+        column_names = ",".join(con.ops.quote_name(f.column) for f in fields)
+        placeholders = ",".join(("%s",) * len(fields))
+        con.cursor().executemany(
+            "insert into %s (%s) values (%s)" % (table, column_names, placeholders),
+            parameters)
 
-def update_many(objects, fields=[], using="default"):
-    """Update list of Django objects in one SQL query, optionally only
-    overwrite the given fields (as names, e.g. fields=["foo"]).
-    Objects must be of the same Django model. Note that save is not
-    called and signals on the model are not raised."""
-    if not objects:
-        return
+    def update_many(objects, fields=[], using="default"):
+        """Update list of Django objects in one SQL query,
+         optionally only overwrite the given fields (as names, e.g. fields=["foo"]).
+        Objects must be of the same Django model.
+        Note that save is not called and signals on the model are not raised."""
+        if not objects:
+            return
 
-    import django.db.models
-    from django.db import connections
-    con = connections[using]
+        import django.db.models
+        from django.db import connections
+        con = connections[using]
 
-    names = fields
-    meta = objects[0]._meta
-    fields = [f for f in meta.fields if not isinstance(f, django.db.models.AutoField) and (not names or f.name in names)]
+        names = fields
+        meta = objects[0]._meta
+        fields = [f for f in meta.fields if not isinstance(f, django.db.models.AutoField) and (not names or f.name in names)]
 
-    if not fields:
-        raise ValueError("No fields to update, field names are %s." % names)
+        if not fields:
+            raise ValueError("No fields to update, field names are %s." % names)
 
-    fields_with_pk = fields + [meta.pk]
-    parameters = []
-    for o in objects:
-        parameters.append(tuple(f.get_db_prep_save(f.pre_save(o, True), connection=con) for f in fields_with_pk))
+        fields_with_pk = fields + [meta.pk]
+        parameters = []
+        for o in objects:
+            parameters.append(tuple(f.get_db_prep_save(f.pre_save(o, True), connection=con) for f in fields_with_pk))
 
-    table = meta.db_table
-    assignments = ",".join(("%s=%%s"% con.ops.quote_name(f.column)) for f in fields)
-    con.cursor().executemany(
-        "update %s set %s where %s=%%s" % (table, assignments, con.ops.quote_name(meta.pk.column)),
-        parameters)
-    </code>
+        table = meta.db_table
+        assignments = ",".join(("%s=%%s"% con.ops.quote_name(f.column)) for f in fields)
+        con.cursor().executemany(
+            "update %s set %s where %s=%%s" % (table, assignments, con.ops.quote_name(meta.pk.column)),
+            parameters)
+    ```
 
-===== Troubles =====
-  * mysql_config not found: <code>
-    sudo apt-get install libmysqlclient-dev python-dev </code>
-  * 安装 lxml时候提示：bin/sh: 1: xslt-config: not found<code>
-    ** make sure the development packages of libxml2 and libxslt are installed **
-    apt source.list使用官方源：sudo apt-get install libxslt-dev
-    </code>
-  * 使用django.db.connection.cursor时注意事项:<code>
-    如果有多个操作，比如update，delete，insert，则操作后需要提交,代码如下:
-    from django.db import connection,transaction
-    cursor = connection.cursor()
-    cursor.execute(delete_sql or update_sql or insert_sql)
-    transaction.commit_unless_managed()
-    </code>
