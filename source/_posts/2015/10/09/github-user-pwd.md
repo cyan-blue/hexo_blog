@@ -1,4 +1,4 @@
-title: github_user_pwd
+title: github输入用户和密码
 date: 2015-10-09 21:00:20
 categories:
 - technology
