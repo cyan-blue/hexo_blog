@@ -1,5 +1,7 @@
 title: JavaScript 使用
 date: 2015-10-12 09:20:41
+categories:
+- technology
 tags:
 - JS
 ---

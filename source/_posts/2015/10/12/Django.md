@@ -1,5 +1,7 @@
 title: Django 问题收集
 date: 2015-10-12 16:46:06
+categories:
+- technology
 tags:
 - Django
 ---

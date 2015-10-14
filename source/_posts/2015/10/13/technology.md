@@ -1,6 +1,7 @@
-title: technology
+title: python 问题
 date: 2015-10-13 14:19:59
 tags:
+- python
 ---
 Help for HTTP error 400: “Bad Request”
 HTTP Error 400: Bad Request
