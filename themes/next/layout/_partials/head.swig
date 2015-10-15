@@ -62,3 +62,23 @@
     sidebar: '{{ theme.sidebar }}'
   };
 </script>
+<style>
+    icode {
+        font-size: 0.92857em;
+        background-color: #f6f6f6;
+    }
+    icode {
+        padding: 2px 4px;
+        font-size: 90%;
+        color: #c7254e;
+        background-color: #f9f2f4;
+        border-radius: 3px;
+    }
+    icode, kbd, pre, samp {
+        font-family: Consolas,Menlo,Monaco,"Courier New",monospace;
+    }
+    icode, kbd, pre, samp {
+        font-family: monospace, monospace;
+        font-size: 1em;
+    }
+</style>

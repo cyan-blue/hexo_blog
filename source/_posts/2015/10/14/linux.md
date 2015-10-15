@@ -1,4 +1,4 @@
-title: linux
+title: linux 使用集锦
 date: 2015-10-14 10:54:54
 categories:
 - technology
