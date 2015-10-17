@@ -1,9 +1,10 @@
 # when running hexo in a subdirectory (e.g. domain.tld/blog), remove leading slashes ( "/archives" -> "archives" )
 menu:
   home: /
-  #categories: /categories
+  categories: /categories
   archives: /archives
-  commonweal: /404.html
+  tags: /tags
+  #commonweal: /404.html
   guestbook: /guestbook
   about: /about
 
@@ -17,9 +18,7 @@ keywords: "Yann"
 # Leave rss as empty to use site's feed link.
 # Set rss to specific value if you have burned your feed already.
 rss:
-social:
- GitHub: https://github.com/cyan-blue/
- CSDN: http://blog.csdn.net/dale_dede
+
 # Icon fonts
 # Place your font into next/source/fonts, specify directory-name and font-name here
 # Avialable: default | linecons | fifty-shades | feather
@@ -35,7 +34,7 @@ highlight_theme: night eighties
 
 
 # MathJax Support
-mathjax:
+mathjax: True
 
 
 # Schemes
@@ -93,3 +92,13 @@ images: images
 
 # Theme version
 version: 0.4.5.1
+since: 2015
+
+social:
+ GitHub: https://github.com/cyan-blue/
+ CSDN: http://blog.csdn.net/dale_dede
+# title, chinese available
+links_title: Links
+# links
+links:
+  CSDN: http://blog.csdn.net/dale_dede
