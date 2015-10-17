@@ -4,6 +4,7 @@ categories:
 - technology
 tags:
 - Django
+- Error
 ---
 
 need string or buffer, long found

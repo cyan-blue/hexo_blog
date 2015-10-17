@@ -1,15 +1,25 @@
 title: python 问题
 date: 2015-10-13 14:19:59
+categories:
+- python
 tags:
 - python
 ---
-Help for HTTP error 400: “Bad Request”
-HTTP Error 400: Bad Request
+
+IndentationError: unindent does not match any outer indentation level
 =============
+问题描述
+-------------
+一个python脚本，本来都运行好好的，然后写了几行代码，而且也都确保每行都对齐了，但是运行的时候，却出现语法错误
+![Error pic](http://huangyan.qiniudn.com/tab_error.png)
+解决方法
+-------------
+缩进问题，特别是把几个不同的源码拷到一块修改调式的时候容易遇到，因为两个人写的程序缩进可能不一样，有的是tab，有的是空格，这用肉眼很难察觉。把缩进都改为一种格式就可以了。
+
 
 xxx  is not JSON serializable
 =============
-在使用json的时候经常会遇到xxx  is not JSON serializable，也就是无法序列化某些对象。经常使用django的同学知道django里面有个自带的Encoder(`from django.core.serializers.json import DjangoJSONEncoder`)来序列化时间等常用的对象。其实我们可以自己定定义对特定类型的对象的序列化，下面看下怎么定义和使用的。
+在使用json的时候经常会遇到xxx  is not JSON serializable，也就是无法序列化某些对象。经常使用django的同学知道django里面有个自带的Encoder(<code>from django.core.serializers.json import DjangoJSONEncoder</code>)来序列化时间等常用的对象。其实我们可以自己定定义对特定类型的对象的序列化，下面看下怎么定义和使用的。
 ```
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
