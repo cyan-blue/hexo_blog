@@ -107,3 +107,10 @@ grep wait_post_num -rn ./ --exclude-dir="fixtures"
 export GREP_OPTIONS="--exclude-dir=**"
 ```
 然后保存，执行source ~/.bashrc或者. ~/.bashrc，使修改起作用。
+
+
+find
+============
+```
+find ./ -name "*file_name*" 从当前目录查找文件中包含这个字段的文件
+```
