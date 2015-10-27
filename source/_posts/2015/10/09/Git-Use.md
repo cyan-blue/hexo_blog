@@ -7,42 +7,48 @@ tags:
 ---
 
 
-<h4><a href="http://blog.csdn.net/dale_dede/article/details/45643045/"  style="color: #408140;">Git：</a> </h4>
-
-## Git Start
+<span style="color:#408140">Git Start</span>
+=================
 Git是目前世界上最先进的分布式版本控制系统（没有之一）。
-### 查看本地分支:
+查看本地分支:
+-----------------
 ```
 git branch
 ```
-### 查看远程分支:
+查看远程分支:
+-----------------
 ```
 git branch -r
 ```
-### 新建branch：
+新建branch：
+-----------------
 ```
 git checkout -b abc_branch
 ```
 
-### 删除分支
+删除分支
+-----------------
 ```
 git branch -d abc_branch
 ```
 <span style="color:#408140;">强制删除使用 -D</span>
-### 切换branch
+切换branch
+-----------------
 ```
 git checkout abc_branch
 ```
-### 合并分支
+合并分支
+-----------------
 ```
 git merge abc_branch
 ```
-### 查看记录
+查看记录
+-----------------
 ```
 git blame filename 查看该文件目前的每一行最后改动的是什么时候提交的
 git log -p filename 查看这个文件所有的详细提交
 ```
-### 查看某一个文件的所有提交记录：
+查看某一个文件的所有提交记录：
 ```
 git log --pretty=oneline 文件路径`
 git log --pretty=oneline views.py
@@ -50,13 +56,16 @@ git log --pretty=oneline views.py
 >>0d08b578371afb8f45748a0491faa2a7820d7928 second commit
 >>3fcc3973deee5c33695c0b40b18a11f83c986b2d first commit
 ```
-### 查看某一个记录的修改内容：
-```
-git show 3fcc3973deee5c33695c0b40b18a11f83c986b2d
-```
->例子里面打印出来的就是针对文件views.py的所有的改动历史，每一行最前面的那一长串数字就是每次提交形成的哈希值，接下来使用git show即可显示具体的某次的改动的修改
+查看某一个记录的修改内容：
+-----------------
+*
+	```
+	git show 3fcc3973deee5c33695c0b40b18a11f83c986b2d
+	```
+	例子里面打印出来的就是针对文件views.py的所有的改动历史，每一行最前面的那一长串数字就是每次提交形成的哈希值，接下来使用git show即可显示具体的某次的改动的修改
 
-### 存储
+存储
+-----------------
 -   ```
     git stash
     ```
@@ -79,8 +88,9 @@ git show 3fcc3973deee5c33695c0b40b18a11f83c986b2d
     ```
     **详细可以使用 git stash -help**
 
-----------
-### git pull --rebase
+git pull --rebase
+-----------------
+
 >当本地commit一个提交和远端服务器中的代码有冲突(别人也改了相同的文件)时可以在pull 中加 –rebase。
 
 >加上rebase的意思是：
@@ -90,61 +100,85 @@ git show 3fcc3973deee5c33695c0b40b18a11f83c986b2d
 最后再合并刚刚暂存下來的本地变更
 
 
-### 修改commit 内容
-```
-git commit --amend 可以修改最后一次 commit
-```
-
+修改commit 内容
+-----------------
 1. // 查看修改
-```
-git rebase -i master~1 //最后一次
-git rebase -i master~5 //最后五次
-```
+	```
+	git commit --amend 可以修改最后一次 commit
+	```
+
+	```
+	git rebase -i master~1 //最后一次
+	git rebase -i master~5 //最后五次
+	```
 2. // 显示结果如下，修改 pick 为 edit ，并 :wq 保存退出
-```
-pick 92b495b 2009-08-08: ×××××××
-Rebase 9ef2b1f..92b495b onto 9ef2b1f
-Commands:
-pick = use commit
-edit = use commit, but stop for amending //改上面的 pick 为 edit
-squash = use commit, but meld into previous commit
-If you remove a line here THAT COMMIT WILL BE LOST.
- However, if you remove everything, the rebase will be aborted.
-```
+	```
+	pick 92b495b 2009-08-08: ×××××××
+	Rebase 9ef2b1f..92b495b onto 9ef2b1f
+	Commands:
+	pick = use commit
+	edit = use commit, but stop for amending //改上面的 pick 为 edit
+	squash = use commit, but meld into previous commit
+	If you remove a line here THAT COMMIT WILL BE LOST.
+	 However, if you remove everything, the rebase will be aborted.
+	```
 3. 命令行显示：
-```
-Rebasing (1/1)
-You can amend the commit now, with
-git commit --amend
-```
+
+	```
+	Rebasing (1/1)
+	You can amend the commit now, with
+	git commit --amend
+	```
 4. 使用 `git commit --amend` 进行修改，完成后 :wq 退出
 5. 使用 `git rebase --continue` 完成操作
 
+恢复文件
+-----------------
+- git 恢复		
+	```
+	git checkout
+	```
+- git 返回到某个节点的文件
+	
+	```
+	git checkout 1bbbb91aaf96f1274750c6fd21d77c5e7142d424 文件路径
+	```
 
-----------
-### 恢复文件
-```
-git checkout
-```
-git 返回到某个节点的文件
+git 有用的小贴士
+-----------------
 
-```
-git checkout 1bbbb91aaf96f1274750c6fd21d77c5e7142d424 文件路径
-```
+	```
+	> 内建的git输出 gitk
+	> 彩色的git输出 git config color.ui true
+	> git config format.pretty oneline
+	```
 
-### git 有用的小贴士
-```
-> 内建的git输出 gitk
-> 彩色的git输出 git config color.ui true
-> git config format.pretty oneline
-```
-
-## <span style="color:#408140;">Git 使用时候遇到的错误</span>
-
+<span style="color:red;">Git 使用时候遇到的错误</span>
+=================
 1. GIT CLONE ERROR
 错误fatal: The remote end hung up unexpectedly
 解决方案：
-```
-git config --global http.postBuffer 24288000
-git config --list
-```
+	```
+	git config --global http.postBuffer 24288000
+	git config --list
+	```
+
+<span style="color:blue;">GIT 一般使用：</span>
+=================
+
+从一般开发者的角度来看，git有以下功能：
+-----------------
+1. 从服务器上克隆数据库（包括代码和版本信息）到单机上。
+2. 在自己的机器上创建分支，修改代码。
+3. 在单机上自己创建的分支上提交代码。
+4. 在单机上合并分支。
+5. 新建一个分支，把服务器上最新版的代码fetch下来，然后跟自己的主分支合并。
+6. 生成补丁（patch），把补丁发送给主开发者。
+7. 看主开发者的反馈，如果主开发者发现两个一般开发者之间有冲突（他们之间可以合作解决的冲突），就会要求他们先解决冲突，然后再由其中一个人提交。如果主开发者可以自己解决，或者没有冲突，就通过。
+8. 一般开发者之间解决冲突的方法，开发者之间可以使用pull 命令解决冲突，解决完冲突之后再向主开发者提交补丁。
+
+从主开发者的角度（假设主开发者不用开发代码）看，git有以下功能：
+-----------------
+1. 查看邮件或者通过其它方式查看一般开发者的提交状态。
+2. 打上补丁，解决冲突（可以自己解决，也可以要求开发者之间解决以后再重新提交，如果是开源项目，还要决定哪些补丁有用，哪些不用）。
+3. 向公共服务器提交结果，然后通知所有开发人员。
