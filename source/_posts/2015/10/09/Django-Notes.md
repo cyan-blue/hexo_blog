@@ -1,9 +1,9 @@
 title: Django Notes
 date: 2015-10-09 13:39:28
 categories:
-- technology
+- Django
 tags:
-- DJANGO
+- Django
 ---
 
 ## Django Basics

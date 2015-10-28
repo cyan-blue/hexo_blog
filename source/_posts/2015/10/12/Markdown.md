@@ -1,7 +1,7 @@
 title: Markdown 使用
 date: 2015-10-12 09:40:28
 categories:
-- technology
+- 技术点滴
 tags:
 - Markdown
 ---

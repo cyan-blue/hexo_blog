@@ -1,7 +1,7 @@
 title: URI和URL的区别
 date: 2015-10-12 20:36:45
 categories:
-- technology
+- 技术点滴
 tags:
 - 技术点滴
 ---

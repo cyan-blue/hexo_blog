@@ -1,9 +1,9 @@
 title: Git Use
 date: 2015-10-09 11:30:39
 categories:
-- technology
+- Git
 tags:
-- GIT
+- Git
 ---
 
 

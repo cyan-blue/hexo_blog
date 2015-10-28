@@ -90,10 +90,31 @@ class UserEncoder(json.JSONEncoder):
 json_2 = {'user':User('orangle')}
 print json.dumps(json_2, cls=UserEncoder)
 
-'''
+
 PS D:\code\python\python_abc> python .\json_extention.py
 {"date": "2014-03-16 14:01:46.738000", "num": 1112}
 {"user": "orangle"}
 
-'''
 ```
+
+unsupported operand type(s) for +: 'float' and 'Decimal'
+=================================
+在使用django时候，取得数据库中的Float型时，与cost相加出现的错误
+
+	```
+	 cost = 0
+	 daily_order.cost_of_product = daily_order.cost_of_product + cost
+	```
+解决方法
+
+	```
+	import decimal
+	​daily_order.cost_of_product = decimal.Decimal(daily_order.cost_of_product) + cost
+	```
+need string or buffer, long found
+=============
+今天给 Django 设计模型时, 把模型的 __unicode__() 函数设计成返回 id, 结果出现了
+coercing to Unicode: need string or buffer, long found
+
+感觉很奇怪. 总是提个醒吧, 不要妄图用 __unicode__() 得到 id.
+不过 unicode(id) 应该是可以的吧.
