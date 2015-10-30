@@ -1,9 +1,9 @@
 title: python复制（深浅）
 date: 2015-10-17 20:15:35
 categories:
-- python
+- Python
 tags:
-- python
+- Python
 ---
 
 关于python list对象的使用

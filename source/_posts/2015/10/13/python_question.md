@@ -1,9 +1,9 @@
 title: python 问题
 date: 2015-10-13 14:19:59
 categories:
-- python
+- Python
 tags:
-- python
+- Python
 ---
 
 IndentationError: unindent does not match any outer indentation level

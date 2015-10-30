@@ -3,7 +3,7 @@ date: 2015-10-09 21:00:20
 categories:
 - Git
 tags:
-- GITHUB
+- GitHub
 ---
 
 ## 每次git push 的时候总是要输用户名和密码的解决方法

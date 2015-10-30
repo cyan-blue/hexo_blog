@@ -6,11 +6,11 @@ tags:
 - Linux
 ---
 
+![GEEK](http://huangyan.qiniudn.com/geek.jpg?imageMogr2/thumbnail/300x200 "GEEK")
 
 删除Linux系统下history记录的方法
 =================
 
-![GEEK](http://huangyan.qiniudn.com/geek.jpg?imageMogr2/thumbnail/300x200 "GEEK")
  
 入侵时目标如果是linux服务器，看切忌清理痕迹的时候别忘记history命令的记录哦 
  

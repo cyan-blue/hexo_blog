@@ -1,9 +1,9 @@
 title: python-date
 date: 2015-10-20 18:28:44
 categories:
-- python
+- Python
 tags:
-- python
+- Python
 ---
 
 python 时间戳 datetime string 转换

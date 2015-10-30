@@ -1,10 +1,10 @@
 title: 项目问题汇总
 date: 2015-10-21 10:52:45
 categories:
-- django
-- ubuntu
+- Django
+- Ubuntu
 tags:
-- django
+- Django
 ---
 
 安装django项目问题汇总
