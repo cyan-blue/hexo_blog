@@ -46,3 +46,36 @@ echo "安装完成"
 * :%d     #清空缓存区
 
 [vim 使用](https://github.com/qiwsir/vim/blob/master/tips.md)
+
+
+vim 使用tip
+--------------
+编写python程序
+
+自动插入头信息：
+```
+#!/usr/bin/env python
+# coding=utf-8
+```
+输入.或按TAB键会触发代码补全功能
+
+:w保存代码之后会自动检查代码错误与规范
+
+按F6可以按pep8格式对代码格式优化
+按F5可以一键执行代码
+F3: documents tree
+多窗口操作
+
+* 使用:sp + 文件名可以水平分割窗口
+* 使用:vs + 文件名可以垂直分割窗口
+* 使用Ctrl + w可以快速在窗口间切换
+
+编写markdown文件
+
+编写markdown文件(*.md)的时候，在normal模式下按 md 即可在当前目录下生成相应的html文件
+生成之后还是在normal模式按fi可以使用firefox打开相应的html文件预览
+当然也可以使用万能的F5键来一键转换并打开预览
+如果打开过程中屏幕出现一些混乱信息，可以按Ctrl + l来恢复
+快速注释
+
+按\ 可以根据文件类型自动注释
