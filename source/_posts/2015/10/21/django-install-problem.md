@@ -116,3 +116,22 @@ W: Duplicate sources.list entry
 sudo apt-get remove vim-common
 sudo apt-get install vim
 ```
+4、无法安装pip
+------------
+<B>问题描述:</B>
+
+the following packages have unmet dependencies:
+ python-pip : Depends: python-setuptools (>= 0.6c1) but it is not going to be installed
+              Recommends: python-dev-all (>= 2.6) but it is not installable
+<B>解决方法:</B>
+```
+First remove the python-pkg-resources completely using
+
+ sudo apt-get purge python-pkg-resources
+Once completed successfully, first run
+
+  sudo apt-get -f install
+then
+
+   sudo apt-get install python-pip
+```

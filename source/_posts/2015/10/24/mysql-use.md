@@ -9,9 +9,9 @@ tags:
 
 ubuntu上安装mysql非常简单只需要几条命令就可以完成。
 
-　　1. sudo apt-get install mysql-server
+　　1. 'sudo apt-get install mysql-server'
  
-　　2. apt-get isntall mysql-client
+　　2. apt-get install mysql-client
  
 　　3.  sudo apt-get install libmysqlclient-dev
  
@@ -27,3 +27,21 @@ ubuntu上安装mysql非常简单只需要几条命令就可以完成。
 
 
 create database dbname；
+
+
+
+遇到的问题：
+
+mysql-server : Depends: mysql-server-5.5 but it is not going to be installed
+E: Unable to correct problems, you have held broken packages.
+
+```
+sudo apt-get purge mysql-client-core-5.6
+sudo apt-get autoremove
+sudo apt-get autoclean
+sudo apt-get install mysql-client-core-5.5
+sudo apt-get install mysql-server 
+```
+然并卵,
+后面试了一下[aptitude](http://baike.baidu.com/link?url=tUAAth_0e71ZBGWOArrnufdAk3Hg3frsWXq6VsxOFIIdjP-0ngvFDV5MOdOxUf-5vZ-K-7dPMKqnQpqWeTVtLq)
+后面觉得应该是源使用错误的问题，要对应相同版本的源，<code>lsb_release -a</code>查看
