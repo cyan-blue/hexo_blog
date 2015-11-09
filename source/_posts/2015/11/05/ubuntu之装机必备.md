@@ -6,6 +6,8 @@ categories:
 tags:
 - Linux
 ---
+我的装机必备软件（持续更新～）
+=============
 * 系统
 	- 更换源
 	- synergy 多电脑共享
@@ -37,3 +39,6 @@ tags:
 	- npm install hexo-server --save
 	- npm config set user 0
 	- npm config set unsafe-perm true
+
+
+* sudo apt-get install ipython  #高级的交互解释器

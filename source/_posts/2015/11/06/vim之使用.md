@@ -6,6 +6,8 @@ tags:
 - Linux
 - Vim
 ---
+Vim安装
+=============
 ```
 wget -qO- https://raw.github.com/ma6174/vim/master/setup.sh | sh
 ```
@@ -41,11 +43,33 @@ rm ma6174
 echo "安装完成"
 ```
 
+Vim 使用
+===============
 * :Tlist  #概略图  
 	- 快捷开关键 <code style="color:green">tl</code>
 * :%d     #清空缓存区
 
+* 格式化全文： gg=G
+
+* 自动缩进当前行： ==
+
+* 关键字搜索
+	- 用/和？的区别
+
+		/后跟查找的字符串。vim会显示文本中第一个出现的字符串。
+
+		?后跟查找的字符串。vim会显示文本中最后一个出现的字符串。
+	- 注意事项：
+
+		不管用/还是？查找到第一个字符串后，按回车，vim会高亮所有的匹配文
+		系统新氧ubuntu下默认的是incsearch模式，就是输完命令后，会自动显示第一个（或最后一个）匹配。
+		如果输入：set noincsearch 会转到普通模式，不会自动显示第一个匹配，回车后显示所有匹配。
+		高亮所有的匹配后，按<span style="color:red">n键</span>转到下一个匹配，按N键转到上一个匹配。
+
 [vim 使用](https://github.com/qiwsir/vim/blob/master/tips.md)
+
+
+
 
 
 vim 使用tip

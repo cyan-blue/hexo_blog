@@ -1,8 +1,8 @@
 title: django之related_name(转载)
 date: 2015-11-06 17:54:18
 categories:
-- 转载
 - Django
+- 转载
 tags:
 - Django
 ---
