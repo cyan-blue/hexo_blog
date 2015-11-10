@@ -46,8 +46,8 @@ highlight:
 
 # Category & Tag
 default_category: uncategorized
-category_map:
-tag_map:
+category_map: true
+tag_map: true
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
