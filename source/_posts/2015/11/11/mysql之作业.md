@@ -1,6 +1,9 @@
 title: mysql之作业
 date: 2015-11-11 15:54:38
+categories:
+- MySql
 tags:
+- MySql
 ---
 在网上找了一个比较全的入门教程
 ========================
@@ -24,21 +27,22 @@ tags:
 3. 插入数据： 
 
 	```
-	insert into examinfo values('1','2011-4-23 23:26:50'); 
+	insert into examinfo values('1','2015-11-11 11:11:11'); 
 	```
 
-	定界符
-	```
-	DELIMITER //
-	```
+	-	定界符(设置数据库以//作为结束)
+	
+		```
+		DELIMITER //
+		```
 4. 创建存储过程test 
-
+	
 	```
 	mysql> select * from examinfo;
 	+----+---------------------+
 	| id | endtime             |
 	+----+---------------------+
-	|  1 | 2011-04-23 23:26:50 |
+	|  1 | 2015-11-11 11:11:11 |
 	+----+---------------------+
 	1 row in set (0.00 sec)
 	
@@ -70,7 +74,6 @@ tags:
 	-	开启事件任务: alter event e_test ON COMPLETION PRESERVE ENABLE; 
 
 7. 查看结果
-
 	```
 	mysql> select * from examinfo//
 	+----+---------------------+
@@ -89,6 +92,7 @@ tags:
 	1 row in set (0.00 sec)
 	
 	```
+到此一个作业就算结束了，这用了存储过程
 
 查看存储过程
 -------------
