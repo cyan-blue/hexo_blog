@@ -111,3 +111,8 @@ tags:
 show create procedure proc_name;
 show create function func_name;
 ```
+创建数据库的指定字符编码
+----------------
+```
+create database shopmgr character set utf8 collate utf8_general_ci;
+```
