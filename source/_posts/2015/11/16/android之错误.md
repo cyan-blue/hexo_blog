@@ -1,4 +1,4 @@
-title: android之错误
+title: android之androidStudio错误
 date: 2015-11-16 10:52:57
 tags:
 - android

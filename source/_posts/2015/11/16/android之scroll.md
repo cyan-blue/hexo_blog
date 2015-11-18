@@ -4,6 +4,7 @@ tags:
 ---
  前些日子在开发中用到了需要ScrollView嵌套GridView的情况，由于这两款控件都自带滚动条，当他们碰到一起的时候便会出问题，即GridView会显示不全。
 解决办法，自定义一个GridView控件
+```
 public class MyGridView extends GridView {
     public MyGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -25,8 +26,10 @@ public class MyGridView extends GridView {
         super.onMeasure(widthMeasureSpec, expandSpec);
     }
 }
+```
 该自定义控件只是重写了GridView的onMeasure方法，使其不会出现滚动条，ScrollView嵌套ListView也是同样的道理，不再赘述。
 XML布局代码
+```
 <ScrollView Android:layout_height="wrap_content"
         android:layout_width="fill_parent" android:id="@+id/scroll_content">
         <com.yourclass.MyGridView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,5 +41,30 @@ XML布局代码
             
         </com.yourclass.MyGridView>
     </ScrollView>
+```
 Java调用代码
+```
 MyGridView gridview = (MyGridView) findViewById(R.id.grid_view); 
+```
+
+
+
+
+* scrollView 空白
+
+
+	```
+	<?xml version="1.0" encoding="utf-8"?>
+	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/scrollView1"
+	    android:layout_width="fill_parent"  // 关键设置
+	    android:layout_height="fill_parent"  // 关键设置  不能用match_parent
+	    android:fillViewport="true" 
+	    android:layout_alignParentBottom="true" >
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"   // 关键设置
+	        android:orientation="vertical" >
+	    </LinearLayout>
+	</ScrollView>
+	```
