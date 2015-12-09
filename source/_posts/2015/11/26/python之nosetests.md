@@ -19,3 +19,17 @@ nose会捕获标准输出，调试的print代码默认不会打印。nosetest  �
 nosetests --collect-only -v :不运行程序，只是搜集并输出各个case的名称
 nosetests -x  :一旦case失败立即停止，不执行后续case
 -w ，指定一个目录运行测试。目录可以是相对路径或绝对路径
+
+
+```
+setup
+test_client_is_mobile
+tear down
+.setup
+test_client_is_not_mobile
+tear down
+.setup
+test_get_server_name_from_url
+tear down
+
+```
