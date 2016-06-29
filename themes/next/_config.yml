@@ -12,7 +12,7 @@ menu:
 favicon: /favicon.ico
 baidu_analytics: 8bc84aa88f6fa1f006b5cb3fe1d8af37
 # Set default keywords (Use a comma to separate)
-keywords: "Yann,git,github,git工作流,python,jstorm,django,mysql"
+keywords: "Yann,git,github,git工作流,python,jstorm,django,mysql,代码"
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
@@ -46,8 +46,8 @@ scheme: Mist
 #  - always  expand for all pages automatically
 #  - hide    expand only when click on the sidebar toggle icon.
 #sidebar: post
-#sidebar: always
-sidebar: hide
+sidebar: always
+#sidebar: hide
 
 
 # Automatically scroll page to section which is under <!-- more --> mark.
@@ -103,4 +103,4 @@ links_title: Links
 # links
 links:
   金哲博客: http://jinzhe.net/
-  anotherhome: https://www.anotherhome.net/
+  anotherhome:
